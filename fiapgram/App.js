@@ -10,7 +10,7 @@ class App extends React.Component {
         keyExtractor={item => item.picId.toString()}
         data={data.fotos}
         renderItem={ ({ item }) =>
-          <Post foto={ item } />
+          <Post picture={ item } />
         } />
     );
   }
