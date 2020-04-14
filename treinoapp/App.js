@@ -18,7 +18,7 @@ const App = () => {
         <IconBars />
         {
           workouts.map((w, index) =>
-            <Workout key={index} workout={w} />        
+            <Workout key={index} workout={w} active={index == 1 ? true : false}/>        
           )
         }
       </ScrollView>
