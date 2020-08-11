@@ -1,8 +1,13 @@
-import { Alert, StyleSheet, View, Image, TouchableHighlight, BackHandler } from 'react-native';
+import { Alert, StyleSheet, View, Image, TouchableHighlight, BackHandler, PermissionsAndroid } from 'react-native';
 import React from 'react';
+
+import Geolocation from 'react-native-geolocation-service';
 
 import Status from './components/Status';
 import MessageList from './components/MessageList';
+import Toolbar from './components/Toolbar';
+import ImageGrid from './components/ImageGrid';
+
 import {
   createImageMessage,
   createTextMessage,
@@ -22,6 +27,7 @@ export default class App extends React.Component {
         longitude: -46.686816
       }),
     ],
+    isInputFocused: false,
   };
 
   componentDidMount() {
@@ -71,7 +77,10 @@ export default class App extends React.Component {
         );
         break;
       case 'image':
-        this.setState({ fullscreenImageId : id });
+        this.setState({ 
+          fullscreenImageId : id,
+          isInputFocused: false,
+        });
         break;
       default:
         break;
@@ -117,15 +126,96 @@ export default class App extends React.Component {
     )
   }
 
+  handlePressImage = (uri) => {
+    const { messages } = this.state;
+    
+    this.setState({
+      messages: [
+        createImageMessage(uri),
+        ...messages
+      ]
+    });
+  };
+
   renderInputMethodEditor() {
     return (
-      <View style={ styles.inputMethodEditor }></View>
+      <View style={ styles.inputMethodEditor }>
+        <ImageGrid onPressImage={this.handlePressImage} />
+      </View>
     );
   }
 
+  handlePressToolbarCamera = () => {
+    //...
+  };
+
+  handlePressToolbarLocation = async () => {
+    const { messages } = this.state;
+
+    const granted = await this.requestLocationPermission();
+
+    if(granted) {
+      Geolocation.getCurrentPosition((position) => {
+        const { coords: { latitude, longitude } } = position;
+
+        this.setState({
+          messages:[
+            createLocationMessage({latitude, longitude}),
+            ...messages
+          ],
+        });
+      });
+    }
+
+  };
+
+  requestLocationPermission = async () => {
+    try {
+      
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          message: 'Você autoriza o MESSAGES acessar a localização do seu dispositivo?',
+          buttonNegative: 'Negar',
+          buttonPositive: 'PERMITIR',
+        }
+      );
+      
+      if(granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      }
+      return false;
+
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  handleChangeFocus = (isFocused) => {
+    this.setState({ isInputFocused: isFocused });
+  };
+
+  handleSubmit = (text) => {
+    const { messages } = this.state;
+
+    this.setState({
+      messages: [createTextMessage(text), ...messages],
+    });
+  };
+
   renderToolbar() {
+    const { isInputFocused } = this.state;
+
     return (
-      <View style={ styles.toolbar }></View>
+      <View style={ styles.toolbar }>
+        <Toolbar 
+          isFocused={isInputFocused}
+          onSubmit={this.handleSubmit}
+          onChangeFocus={this.handleChangeFocus}
+          onPressCamera={this.handlePressToolbarCamera} 
+          onPressLocation={this.handlePressToolbarLocation} 
+          />
+      </View>
     );
   }
 

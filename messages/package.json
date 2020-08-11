@@ -16,8 +16,10 @@
     "expo-permissions": "^9.1.0",
     "react": "16.13.1",
     "react-native": "0.63.2",
+    "react-native-geolocation-service": "^5.0.0",
     "react-native-maps": "^0.27.1",
-    "react-native-unimodules": "^0.10.1"
+    "react-native-unimodules": "^0.10.1",
+    "react-native-vector-icons": "^7.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
