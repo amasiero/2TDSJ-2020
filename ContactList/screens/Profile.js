@@ -3,22 +3,36 @@ import {StyleSheet, View} from 'react-native';
 import ContactThumbnail from '../components/ContactThumbnail';
 import DetailListItem from '../components/DetailListItem';
 
-import {fetchRandomContact} from '../utils/api';
 import colors from '../utils/colors';
 
 export default class Profile extends React.Component {
-  state = {
-    contact: {},
+  static navigationOptions = ({
+    navigation: {
+      state: {params},
+    },
+  }) => {
+    const {
+      contact: {name},
+    } = params;
+    return {
+      title: name.split(' ')[0],
+      headerTintColor: 'white',
+      headerStyle: {
+        backgroundColor: colors.blue,
+        elevation: 0, // remove shadow on Android
+        shadowOpacity: 0, // remove shadow on iOS
+      },
+    };
   };
 
-  async componentDidMount() {
-    const contact = await fetchRandomContact();
-
-    this.setState({contact});
-  }
-
   render() {
-    const {avatar, name, email, phone, cell} = this.state.contact;
+    const {
+      navigation: {
+        state: {params},
+      },
+    } = this.props;
+    const {contact} = params;
+    const {avatar, name, email, phone, cell} = contact;
 
     return (
       <View style={styles.container}>
@@ -27,8 +41,8 @@ export default class Profile extends React.Component {
         </View>
         <View style={styles.detailSection}>
           <DetailListItem icon="mail" title="Email" subtitle={email} />
-          <DetailListItem icon="phone" title="Work" subtitle={phone} />
-          <DetailListItem icon="smartphone" title="Personal" subtitle={cell} />
+          <DetailListItem icon="phone" title="Trabalho" subtitle={phone} />
+          <DetailListItem icon="smartphone" title="Pessoal" subtitle={cell} />
         </View>
       </View>
     );
