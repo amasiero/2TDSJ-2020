@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import ContactThumbnail from '../components/ContactThumbnail';
 import DetailListItem from '../components/DetailListItem';
+import store from '../store';
 
 import colors from '../utils/colors';
 
@@ -11,9 +12,10 @@ export default class Profile extends React.Component {
       state: {params},
     },
   }) => {
-    const {
-      contact: {name},
-    } = params;
+    const {id} = params;
+    const {name} = store
+      .getState()
+      .contacts.find((contact) => contact.id === id);
     return {
       title: name.split(' ')[0],
       headerTintColor: 'white',
@@ -25,14 +27,18 @@ export default class Profile extends React.Component {
     };
   };
 
+  state = store.getState();
+
   render() {
     const {
       navigation: {
         state: {params},
       },
     } = this.props;
-    const {contact} = params;
-    const {avatar, name, email, phone, cell} = contact;
+    const {id} = params;
+    const {avatar, name, email, phone, cell} = this.state.contacts.find(
+      (contact) => contact.id === id,
+    );
 
     return (
       <View style={styles.container}>

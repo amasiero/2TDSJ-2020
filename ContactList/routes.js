@@ -1,7 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
+// import {createBottomTabNavigator} from 'react-navigation-tabs';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -11,48 +12,85 @@ import Contacts from './screens/Contacts';
 import Favorites from './screens/Favorites';
 import User from './screens/User';
 import Profile from './screens/Profile';
+import Options from './screens/Options';
 
-const getTabBarIcon = (icon) => ({tintColor}) => (
-  <Icon name={icon} size={26} style={{color: tintColor}} />
+// const getTabBarIcon = (icon) => ({tintColor}) => (
+//   <Icon name={icon} size={26} style={{color: tintColor}} />
+// );
+
+const getDrawerItemIcon = (icon) => ({tintColor}) => (
+  <Icon name={icon} size={22} style={{color: tintColor}} />
 );
 
 const ContactScreens = createStackNavigator(
   {
-    Contacts,
-    Profile,
+    Contacts: {
+      screen: Contacts,
+    },
+    Profile: {
+      screen: Profile,
+    },
   },
   {
     initialRouteName: 'Contacts',
     navigationOptions: {
-      tabBarIcon: getTabBarIcon('list'),
+      // tabBarIcon: getTabBarIcon('list'),
+      drawerIcon: getDrawerItemIcon('list'),
     },
   },
 );
 
 const FavoritesScreens = createStackNavigator(
   {
-    Favorites,
-    Profile,
+    Favorites: {
+      screen: Favorites,
+    },
+    Profile: {
+      screen: Profile,
+    },
   },
   {
     initialRouteName: 'Favorites',
     navigationOptions: {
-      tabBarIcon: getTabBarIcon('star'),
+      // tabBarIcon: getTabBarIcon('star'),
+      drawerIcon: getDrawerItemIcon('star'),
     },
   },
 );
 
 const UserScreens = createStackNavigator(
-  {User},
+  {User, Options},
   {
+    mode: 'modal',
     initialRouteName: 'User',
     navigationOptions: {
-      tabBarIcon: getTabBarIcon('person'),
+      // tabBarIcon: getTabBarIcon('person'),
+      drawerIcon: getDrawerItemIcon('person'),
     },
   },
 );
 
-const TabNavigator = createBottomTabNavigator(
+// const TabNavigator = createBottomTabNavigator(
+//   {
+//     Contacts: ContactScreens,
+//     Favorites: FavoritesScreens,
+//     User: UserScreens,
+//   },
+//   {
+//     initialRouteName: 'Contacts',
+//     tabBarOptions: {
+//       style: {
+//         backgroundColor: colors.greyLight,
+//       },
+//       showLabel: false,
+//       showIcon: true,
+//       activeTintColor: colors.blue,
+//       inactiveTintColor: colors.greyDark,
+//     },
+//   },
+// );
+
+const DrawerNavigator = createDrawerNavigator(
   {
     Contacts: ContactScreens,
     Favorites: FavoritesScreens,
@@ -60,16 +98,9 @@ const TabNavigator = createBottomTabNavigator(
   },
   {
     initialRouteName: 'Contacts',
-    tabBarOptions: {
-      style: {
-        backgroundColor: colors.greyLight,
-      },
-      showLabel: false,
-      showIcon: true,
-      activeTintColor: colors.blue,
-      inactiveTintColor: colors.greyDark,
-    },
+    renderIndicator: () => null,
   },
 );
 
-export default createAppContainer(TabNavigator);
+// export default createAppContainer(TabNavigator);
+export default createAppContainer(DrawerNavigator);
