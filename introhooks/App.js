@@ -1,7 +1,7 @@
 import React, {useEffect, useState, useReducer} from 'react';
 import {SafeAreaView, Text, StyleSheet, Button, Dimensions} from 'react-native';
 
-// const MeuComponente = (props) => <Text style={styles.text}>{props.nome}</Text>;
+const MeuComponente = (props) => <Text style={styles.text}>{props.nome}</Text>;
 
 const ACTIONS = {
   INCREMENTAR: 'INCREMENTAR',
@@ -60,13 +60,9 @@ const App = () => {
         title="Ver useEffect funcionando"
         onPress={() => setOutroEstado(outroEstado + 1)}
       />
+      <MeuComponente nome="Andrey Masiero" />
     </SafeAreaView>
   );
-  // return (
-  //   <View style={styles.container}>
-  //     <MeuComponente nome="Andrey Masiero" />
-  //   </View>
-  // );
 };
 
 const styles = StyleSheet.create({
